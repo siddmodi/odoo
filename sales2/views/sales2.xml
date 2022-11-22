@@ -68,7 +68,16 @@ position="replace" : To replace parent form view field with your newly created f
                 <attribute name="required">1</attribute>
             </xpath> 
 
-            <!-- <xpath expr="/form/sheet/notebook/page[@name='other_information']" position="replace"/> -->
+            <!--The following block of code for testing for github-->
+            <!--When we gonna edit something i n the code the code will get special mark stating this the additional code
+            which we added and not present in github and after saving the file got a capital 'M' stating there is a modification in that
+            file which is not pushed till now-->
+
+            <xpath expr="/form/sheet/group/group[@name='order_details']/field[@name='validity_date']" position="attributes">    
+                <attribute name="required">1</attribute>
+            </xpath>
+
+                        <!-- <xpath expr="/form/sheet/notebook/page[@name='other_information']" position="replace"/> -->
 
             <!-- <field name="" position="">
                 <field name="">
