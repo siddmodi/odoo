@@ -1,0 +1,12 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--This is the rule we created like this group (which we also defined in this security.xml file) can only excess records which are fullfilling following defined conditions, we can also define here the crud opearations-->
+    <!--Below we did'nt mention any group which means for whole module users this rule is applicable not for any particular group-->
+    <record id="rule_male_only" model="ir.rule">                            <!--settings -> Technical -> record Rules (Here all record rules present in the db)-->
+        <field name="name">See Only Males</field>        
+        <field name="model_id" ref="model_travel_management"/>              <!--In 'ref' param we define model by model_modelName where '.' of model name is replaced by '_'-->            
+        <field name="domain_force">[('employee_gender','=','male')]</field>   <!--Here we define the condition-->
+    </record>
+
+</odoo> -->

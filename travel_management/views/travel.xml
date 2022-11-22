@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- <record id="travel_management_list_view" model="ir.ui.view">
+        <field name="name">travel.list.view</field>
+        <field name="model">travel.management</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_name"/>
+                <field name="manager_name"/>
+            </tree>
+        </field>
+    </record> -->
+
+
+
+    <!-- <record id="travel_management_form_view" model="ir.ui.view">
+        <field name="name">travel.form.view</field>
+        <field name="model">travel.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="employee_name"/>
+                        <field name="manager_name"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record> -->
+
+
+<!--If we want to see module in apps tab then we have to add a corresponding action to the menu item-->
+<!-- Following code for creating form view-->                    <!--When definig view the name should be view_modelName_viewType, this is the coding standard we have to follow-->
+<record id="view_travel_management_form" model="ir.ui.view">      <!--We create views in this model named 'ir.ui.view', settings -> technical-> views (Here we find all the views present in odoo)-->
+    <field name="name">travel.management.form</field>        <!--'travel.management.form' is the view name we set, we can see all view names present in odoo in db table names ir.ui.views-->
+    <field name="model">travel.management</field>            <!--We're creating a form view for the model named travel.management-->
+    <field name="arch" type="xml">
+        <form>                                               <!-- Using this form tag odoo understand this is a form view-->
+            <header>
+                <button name="%(travel_management.action_mark_lost)d" string="Mark Lost" type="action" class="oe_highlight"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,progress,requested"/>            <!-- To see the status bar on top right of form view...., options="{'clickable':'1'}"-->
+                    <button name="action_progress" string="Submit" type="object" states="draft" class="oe_highlight"/>                <!--creating buttons for controlling statusbar, example like by clicking submit button the status moved to request state-->
+                    <button name="action_requested" string="Request" type="object" states="progress" class="oe_highlight"/>              <!--The name param we gave here are functions which we define in corresponding model python file, a button of type object will calling python function-->
+                    <button name="action_closed" string="Close" type="object" states="draft,progress,requested"/>
+                    <button name="action_draft" string="Reset To Draft" type="object" states="closed"/>
+            </header>
+            <sheet>                                          <!-- To create a sheet type of design around form-->
+                <group>                                      <!-- <field name="image" widget="image" class="oe_avatar"> -->
+                    <group>                                  <!-- Using group tag for seeing the label of the field-->
+                        <field name="employee_image" widget="image"/>
+                        <field name="employee_name"/>        <!-- Here we define our field name as per in travel.py file-->
+                        <field name="manager_name"/>
+                        <field name="job_role"/>
+                        <field name="department"/>
+                        <field name="source_location"/>
+                        <field name="destination"/>
+                        <field name="flight_name"/>
+                        <field name="date_of_birth"/>
+                        <field name="age"/>
+                        <field name="currency_id"/>
+                        <field name="salary"/>
+                        <field name="fees" widget="monetary"/>
+                    </group>                                 <!-- In sheet tag we created 2 groups inside a single group to divide the form in 2 parts vertically to look good-->
+                    <group>
+                        <field name="employee_gender"/>
+                        <field name="flight_number"/>
+                        <field name="no_of_days"/>
+                        <field name="date_of_arrival"/>
+                        <field name="date_of_return"/>
+                        <field name="current_status"/>
+                        <field name="responsible_id"/>
+                        <field name="tags_ids" widget="many2many_tags"/>                    <!--This 'many2many_tags' widget heps in better view-->
+                        <field name="is_intern"/>
+                        <field name="future_date"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string='HTML Template ' name='page_html'>
+                        <group>
+                            <field name="prescription" placeholder="Enter your prescription"/>
+                        </group>
+                    </page>
+                    <page string='Task' name='page_task'>
+                        <field name='one2many_field_ids'>
+                            <tree editable="top">
+                                <field name='task'/>
+                                <field name='percentage_completed'/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <group>
+                                        <field name='task'/>
+                                    </group>
+                                    <group>
+                                        <field name='percentage_completed'/>
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+<!-- Following code for creating tree or list view-->
+<record id="view_travel_management_tree" model="ir.ui.view">      <!--"ir.ui.view" is the model present already where we create the list view, here in this model all tree views are present--> 
+    <field name="name">travel.management.tree</field>        
+    <field name="model">travel.management</field>            
+    <field name="arch" type="xml">
+        <tree>
+            <field name="employee_name"/>
+            <field name="manager_name"/>
+            <field name="employee_gender"/>
+            <field name="department"/>
+            <field name="no_of_days"/>
+            <field name="is_intern"/>
+            <field name="responsible_id"/>
+            <field name="employee_gender"/>
+            <field name="state" string="Status"/>
+        </tree>
+    </field>
+</record>
+
+
+<!-- Following code for creating search or controlPanel view-->
+<record id="view_travel_management_search" model="ir.ui.view">      <!--"ir.ui.view" is the model present already where we create all the views, here in this model all the views are present--> 
+    <field name="name">travel.management.search</field>        
+    <field name="model">travel.management</field>            
+    <field name="arch" type="xml">
+        <search>
+            <field name="employee_name"/>                   <!--Based on these 4 fields we can search in tree view using search view-->
+            <field name="manager_name"/>
+            <field name="department"/>
+            <field name="no_of_days"/>
+            <field name="employee_gender"/>
+            
+            <filter name="filter_male" string="Male" domain="[('employee_gender', '=' ,'male')]"/>              <!--The filter is used to add filters as defined, 'name' param for internal purpose, 'string' param for what to show on filters, 'domain' param to write condition of filter-->
+            <filter name="filter_female" string="Female" domain="[('employee_gender', '=' ,'female')]"/>
+            <separator/>                                                                                        <!--By default filter works on or condition but if we wanna use and condition then use 'separator' tab> -->
+            <filter name="filter_is_intern" string="Is Intern" domain="[('is_intern', '=' ,'1')]"/>
+            <separator/>
+            <filter name="filter_it" string="IT" domain="[('department', '=' ,'it')]"/>
+            <filter name="filter_sales" string="Sales" domain="[('department', '=' ,'sales')]"/>
+            <filter name="filter_purchase" string="Purchase" domain="[('department', '=' ,'purchase')]"/>
+            <filter name="filter_hr" string="HR" domain="[('department', '=' ,'hr')]"/>
+
+            <group expand="0" string="Group By">                                   <!--This following tag is the syntax to write group by operations-->
+                <filter string="Employee Gender" name="group_by_employee_gender" context="{'group_by':'employee_gender'}"/>       
+                <filter string="Department" name="group_by_department" context="{'group_by':'department'}"/>                    
+                <filter string="Employees" name="group_by_employee_name" context="{'group_by':'employee_name'}"/>
+                <filter string="Managers" name="group_by_manager_name" context="{'group_by':'manager_name'}"/>
+                <filter string="Number of days " name="group_by_no_of_days" context="{'group_by':'no_of_days'}"/>
+                <filter string="Is Intern" name="group_by_is_intern" context="{'group_by':'is_intern'}"/>
+                <filter string="Status" name="group_by_state" context="{'group_by':'state'}"/>
+            </group>
+        </search>
+    </field>
+</record>                 
+
+<!--Following code for creating graph view-->>
+<record id="view_travel_management_graph" model="ir.ui.view">      
+    <field name="name">travel.management.graph</field>        
+    <field name="model">travel.management</field>            
+    <field name="arch" type="xml">
+        <graph string="Travel number of days graph">
+            <field name="employee_name"/>
+            <field name="no_of_days"/>
+        </graph>
+    </field>
+</record>
+
+
+
+<!-- Following code for creating kanban view-->
+<record id="view_travel_management_kanban" model="ir.ui.view">       
+    <field name="name">travel.management.kanban</field>        
+    <field name="model">travel.management</field>            
+    <field name="arch" type="xml">
+        <kanban>
+            <field name="employee_name"/>
+            <field name="manager_name"/>
+            <field name="employee_gender"/>
+            <field name="department"/>
+            <field name="no_of_days"/>
+            <field name="is_intern"/>
+            <field name="responsible_id"/>
+            <field name="state" string="Status"/>
+            <field name="id"/>
+            <field name="employee_image"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                        <div class="o_kanban_image d-none d-md-block"
+                            t-attf-style="background-image:url('#{kanban_image('travel.management','employee_image',record.id.raw_value,placeholder)}')">
+                            <!-- <img class="o_kanban_image_inner_pic" -->
+                                <!-- t-att-src="kanban_image('travel.management','employee_image',record.id.raw_value)"/> -->
+                        </div>
+                        <div class="oe_kanban_details d-flex flex-column">
+                            <strong>
+                                <field name="employee_name"/>
+                            </strong>
+                            <ul>
+                                <li>
+                                    Manager Name:-<field name="manager_name"/>
+                                </li>
+                                <li>
+                                    Employee Gender:-<field name="employee_gender"/>
+                                </li>
+                                <li>
+                                    Department:-<field name="department"/>
+                                </li>
+                                <li>
+                                    No. of days:-<field name="no_of_days"/>
+                                </li>
+                                <li>
+                                    Is intern:-<field name="is_intern"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+
+
+<!--Following code for creating pivot view-->
+<!--This pivot table is showing employess total applications each month-->
+<record id="view_travel_management_pivot" model="ir.ui.view">      
+    <field name="name">travel.management.pivot</field>        
+    <field name="model">travel.management</field>            
+    <field name="arch" type="xml">
+        <pivot>
+            <field name="employee_name" type="row"/>
+            <field name="date_of_arrival" type="col" interval="month"/>
+        </pivot>
+    </field>
+</record>
+
+
+
+
+<!-- Following code for creating form view in employee module-->
+<record id="view_travel_management3_form" model="ir.ui.view">     
+    <field name="name">travel.management3.form</field>        
+    <field name="model">travel.management3</field>            
+    <field name="arch" type="xml">
+        <form>                                                
+            <sheet>                                          
+                <group>
+                    <group>                                  
+                        <field name="employee_first_name"/>         
+                        <field name="employee_second_name"/>
+                        <field name="employee_gender"/>
+                    </group>                                 
+                    <group>
+                        <field name="employee_image" widget="image"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+<!-- Following code for creating tree or list view-->
+<record id="view_travel_management3_tree" model="ir.ui.view">      <!--"ir.ui.view" is the model present already where we create the list view, here in this model all tree views are present--> 
+    <field name="name">travel.management3.tree</field>        
+    <field name="model">travel.management3</field>            
+    <field name="arch" type="xml">
+        <tree>
+            <field name="employee_first_name"/>
+            <field name="employee_second_name"/>
+            <field name="employee_gender"/>
+        </tree>
+    </field>
+</record>
+
+
+<!--Defining actions of menus (Action means on clicking the menu what has to be executed)-->
+<!--When clicking on the menu its corresponding action will get called and its view is changed-->
+
+    <!--Below code for action of main travel management-->
+    <record id="action_menu_main" model="ir.actions.act_window">                   
+        <field name="name">Employee Wise Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">travel.management</field>                
+        <field name="view_mode">tree,form,graph,kanban,pivot</field>                                 
+        <field name="context">{'search_default_group_by_employee_name':1}</field>
+        <field name="help" type="html">                                 
+            <p class="o_view_nocontent_smiling_face">
+                Create first request
+            </p>
+        </field>
+    </record>
+
+    <!--Below 3 action codes for Request menu sub menus (male,female,all)-->
+    <record id="action_menu_requests_all" model="ir.actions.act_window">                    <!-- 'action_menu_requests_all' this is the action name, model named 'ir.actions.act_window' contains every actions present-->
+        <field name="name">All Requests </field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">travel.management</field>                 <!-- 'res_model' param states which model we have to display on the view -->
+        <field name="view_mode">tree,form,graph,kanban,pivot</field>                         <!-- In 'view_mode' param we have to set which all views has to be visible-->
+        <field name="context">{'search_default_group_by_employee_gender':1}</field>
+        <!-- <field name="context">{'search_default_group_by_employee_name':1}</field>            We pass default groupby in 'context' param, means when we click on travel management button it'll show tree view with the defined filter, In curly braces we pass value as 'search_default_NameOfAnyGroupByFieldWeDefineInGroupby':1 -->
+        <field name="help" type="html">                                   <!--Inside the 'help' param we write anything we wanna display on UI-->
+            <p class="o_view_nocontent_smiling_face">
+                Create first request
+            </p>
+        </field>
+    </record>
+
+
+    <record id="action_menu_requests_male" model="ir.actions.act_window">                   
+        <field name="name">Male Requests </field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">travel.management</field>                
+        <field name="view_mode">tree,form,graph,kanban,pivot</field>                            
+        <field name="domain">[('employee_gender', '=' ,'male')]</field>
+        <!-- <field name="context">{'search_default_group_by_employee_gender':'male'}</field>-->     
+        <field name="help" type="html">                                 
+            <p class="o_view_nocontent_smiling_face">
+                Create first request
+            </p>
+        </field>
+    </record>
+
+
+    <record id="action_menu_requests_female" model="ir.actions.act_window">                   
+        <field name="name">Female Requests </field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">travel.management</field>                
+        <field name="view_mode">tree,form,graph,kanban,pivot</field>              
+        <field name="domain">[('employee_gender', '=' ,'female')]</field>
+        <!-- <field name="context">{'search_default_group_by_employee_gender':'female'}</field>-->
+        <field name="help" type="html">                                 
+            <p class="o_view_nocontent_smiling_face">
+                Create first request
+            </p>
+        </field>
+    </record>
+
+
+    <!--Below action code for Employees menu to show all employees-->
+    <record id="action_menu_employees" model="ir.actions.act_window">    <!--travel_management_action3-->                   
+        <field name="name">Employees</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">travel.management3</field>                 
+        <field name="view_mode">tree,form</field>                         
+        <field name="help" type="html">                                   
+            <p class="o_view_nocontent_smiling_face">
+                Create first employee
+            </p>
+        </field>
+    </record>
+
+
+
+
+    <!-- <menuitem id="travel_management_root_menu" name="Travel Management" sequence="10"/>
+    <menuitem id="travel_management_sub_menu" name="All Requests" parent="travel_management_root_menu" sequence="10"/>
+    <menuitem id="travel_management_profile_menu" name="Requests" parent="travel_management_sub_menu" action="travel_management_action" sequence="10"/> -->
+
+
+    <!--Creation of menus and submenus-->
+    <!--From menus only we can call the actions-->
+    <menuitem id="travel_management_root_menu" 
+              name="Travel Management"
+              action="action_menu_main"/>
+
+
+    <!--When we click on this sub menu the 'action_menu_requests_all' action we define above will get called -->
+    <!--The parent param here means we are creating this sub menu under that parent menu-->
+    <!--To link an action to the menu we use param 'action'-->
+    <menuitem id="menu_requests" name="Requests" parent="travel_management_root_menu">
+        <menuitem id="menu_requests_male" name="Male" action="action_menu_requests_male"/>
+        <menuitem id="menu_requests_female" name="Female" action="action_menu_requests_female"/>
+        <menuitem id="menu_requests_all" name="All" action="action_menu_requests_all"/>
+    </menuitem>
+
+    <menuitem id="travel_management_sub_menu3"           
+              name="Employees" 
+              parent="travel_management_root_menu"   
+              action="action_menu_employees"/>  
+
+</odoo>
+
+
+
+
+
+
+

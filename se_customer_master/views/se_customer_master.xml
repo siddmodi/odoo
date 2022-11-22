@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>   
+
+<!-- There are 2 types of button specify in type param (object and action) object will call the python function and action will call the corresponding action  -->
+<record id="view_customers_form_inherit" model="ir.ui.view">
+    <field name="name">res.partner.form.inherit</field>                          
+    <field name="model">res.partner</field>                                      
+    <field name="inherit_id" ref="base.view_partner_form"/>                         
+    <field name="arch" type="xml">
+
+        <!--For Projects-->
+        <div name="button_box" position="inside">
+            <button class="oe_stat_button" type="object" name="action_view_projects"
+                    icon="fa-list-ul">
+                    <field string="Projects" name="project_count" widget="statinfo"/>
+            </button>
+        </div>
+
+        <!--For attachment field-->
+        <notebook colspan="4" position="inside">
+            <page name="attachment_page" string="Attachments">
+                <group>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </group>
+            </page>
+        </notebook> 
+
+    </field>
+</record>  
+
+</odoo>        
+    
+
+
+

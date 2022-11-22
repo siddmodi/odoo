@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<!-- [11/11 04:17] Raghuchandra
+Siddharth n lalith work on inherit fields in sales 
+
+[11/11 04:18] Raghuchandra
+Read-only any field , replace etc 
+
+[11/11 04:18] Raghuchandra
+Also work on wizard pop up -->
+
+
+<!-- position="after" : To display field after parent form view field mentioned in "expr"
+position="before" : To display field before parent form view field mentioned in "expr"
+position="inside" : To display field inside notebook of parent form view
+position="attributes" : To change field attribute such as read only and visibility of a field
+position="replace" : To replace parent form view field with your newly created field -->
+
+
+<!-- Replace existing field and display a new inherited field
+ <field name="field_id_which_you_want_to_replace" position="replace">
+  <field name="field_id_which_you_want_to_display"/>
+ </field>       -->
+
+<!-- def method_direct_trigger(self):
+    self.check_access_rights('write')
+    for cron in self:
+        cron.with_user(cron.user_id).with_context(lastcall=cron.lastcall).ir_actions_server_id.run()
+        cron.lastcall = fields.Datetime.now()
+    return True -->
+
+<!-- <xpath expr="//button[@name='create_action']" position="replace">
+    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'code')]}"/>
+</xpath> -->
+
+
+<record id="view_order_tree_inherit" model="ir.ui.view">
+    <field name="name">sale.order.tree.inherit</field>                          <!--'sale.order.tree.inherit' is the view name we set, we can see all view names present in odoo in db table names ir.ui.views-->
+    <field name="model">sale.order</field>                                      <!--sale.order is the model name where we wanna make changes-->
+    <field name="inherit_id" ref="sale.view_order_tree"/>                       <!--Here reference of inherit_id is mentioned in param ref = "modelName_that_view_name" or ref="External Id" (External ID we get from debug button -> Edit view list) -->  
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='company_id']" position="attributes">    <!-- //->To enter in model, name='field_name which we wanna define our behaviour' -->
+                <attribute name="invisible">True</attribute>
+            </xpath>                                                            <!--xpath tag is for what action we want to do or about behaviour, expr param = where the field exactly is , position param = behaviour what we want to do with that field -->
+        </data>                                                                 <!--keywords in position param like (attributes, inside, after, before, replace) -->
+    </field>                                                                    <!--attributes as a value of position param means behaviour, by setting attributes as a value of position param we can define multiple behaviour under that using multiple attribute tags -->
+</record>                                                                       <!--name param values are already defined so fix example = "invisible" is fix to hide any column -->
+
+
+<record id="view_order_form_inherit" model="ir.ui.view">
+    <field name="name">sale.order.form.inherit</field>                          
+    <field name="model">sale.order</field>                                      
+    <field name="inherit_id" ref="sale.view_order_form"/>                         
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="/form/sheet/notebook/page[@name='other_information']/group/group/field[@name='company_id']" position="attributes">    
+                <attribute name="invisible">True</attribute>
+            </xpath>  
+
+             <xpath expr="/form/sheet/group/group[@name='order_details']/field[@name='date_order']" position="attributes">    
+                <!-- <attribute name="attrs">{'readonly':1}</attribute> -->
+                <attribute name="readonly">1</attribute>
+            </xpath>   
+
+             <xpath expr="/form/sheet/group/group[@name='order_details']/field[@name='payment_term_id']" position="attributes">    
+                <attribute name="required">1</attribute>
+            </xpath> 
+
+            <!-- <xpath expr="/form/sheet/notebook/page[@name='other_information']" position="replace"/> -->
+
+            <!-- <field name="" position="">
+                <field name="">
+            </field> -->
+
+        </data>                                                                 
+    </field>                                                                    
+</record>    
+
+<!-- There are 2 types of button specify in type param (object and action) object will call the python function and action will call the corresponding action  -->
+<record id="view_customers_form_inherit" model="ir.ui.view">
+    <field name="name">res.partner.form.inherit</field>                          
+    <field name="model">res.partner</field>                                      
+    <field name="inherit_id" ref="base.view_partner_form"/>                         
+    <field name="arch" type="xml">
+        
+        <!-- <field name="opportunity_count" position="before">
+            <button type="action" name="%(project.open_view_project_all_config)d" string="Projects" context="{'default_partner_id': active_id}"> </button>  
+        </field> -->
+
+        <!-- context="{'default_user_id': user_id, 'default_parent_id': id, 'default_project_id': subtask_project_id}" -->
+
+        <!-- <data>
+            <div name="button_box" position="inside">
+                <button type="object"
+                        name="open_view_project"
+                        string="Projects"
+                        icon="fa-list-ul"  
+                        widget="statinfo"> -->
+                        <!-- <field name="project_count" widget="statinfo"/> -->
+                <!-- </button> -->
+            <!-- </div> -->
+        <!-- </data> -->
+            
+
+        <!-- <div name="button_box" position="inside">
+            <button class="oe_stat_button" type="object" name="action_view_projects"
+                    icon="fa-list-ul">
+                    <field string="Projects" name="project_count" widget="statinfo"/>
+            </button>
+        </div> -->
+
+        <!--For sales-->
+        <!-- <div name="button_box" position="inside">
+            <button class="oe_stat_button" type="object" name="action_view_sale_order"
+                    groups="sales_team.group_sale_salesman"
+                    icon="fa-usd">
+                    <field string="Sales" name="sale_order_count" widget="statinfo"/>
+            </button>
+        </div> -->
+
+        <!--For Projects-->
+        <div name="button_box" position="inside">
+            <button class="oe_stat_button" type="object" name="action_view_projects"
+                    icon="fa-list-ul">
+                    <field string="Projects" name="project_count" widget="statinfo"/>
+            </button>
+        </div>
+
+
+
+        <!-- <sheet> -->
+            <!-- <notebook> -->
+                <!-- <page> -->
+                    <!-- <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                        <i class="fa fa-plus-square"/>
+                        Add attachments
+                    </button> -->
+
+                <!-- <field name="documents"/> -->
+                <!-- </page> -->
+            <!-- </notebook> -->
+        <!-- </sheet> -->
+
+        <!-- <notebook colspan="4" position="inside">
+            <page name="attachment_page" string="Attachments">
+                <group>
+                    <field name="attachments" filename="attachment_name"/>
+                    <field name="attachment_name" invisible="1"/>
+                </group>
+            </page>
+        </notebook>  -->
+
+        <notebook colspan="4" position="inside">
+            <page name="attachment_page" string="Attachments">
+                <group>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <!-- <field name="attachment_name" invisible="1"/> -->
+                </group>
+            </page>
+        </notebook> 
+
+    </field>
+</record>  
+
+</odoo>        
+    
+
+
+

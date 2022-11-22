@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_write,perm_create,perm_unlink,perm_read
+
+travel_management_user_id,Base User,model_travel_management,"",1,1,1,1
+travel_management2_user_id,Base User 2,model_travel_management2,"",1,1,1,1
+travel_management3_user_id,Base User 3,model_travel_management3,"",1,1,1,1
+
+
+
