@@ -80,7 +80,7 @@ position="replace" : To replace parent form view field with your newly created f
 
             <!--The following block of code for testing for github-->
             <!--This code for testing the demo branch which i created-->
-            <xpath expr="/form/sheet/group/group[@name='order_details']/field[@name='sale_order_template_id']" position="attributes">    
+            <xpath expr="/form/sheet/group/group[@name='order_details']/field[@name='date_order']" position="attributes">    
                 <attribute name="required">1</attribute>
             </xpath>
 
