@@ -3,11 +3,11 @@ from odoo import api, models, fields
 class Sales2(models.Model):
 
     _inherit = "res.partner"
-
-    # For make a field to attach files 
+    _description = "inherited res partner for sales 2"
+ 
     attachments = fields.Binary(string="Attachments")
     attachment_ids = fields.Many2many('ir.attachment',string='Attachments')
-
+    # For make a field to attach files
     # For Projects
     project_count = fields.Integer(compute='_compute_project_count', string='Project Count')
 
